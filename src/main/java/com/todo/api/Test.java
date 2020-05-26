@@ -1,4 +1,4 @@
-package com.todo;
+package com.todo.api;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
