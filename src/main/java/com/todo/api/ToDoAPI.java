@@ -33,6 +33,14 @@ public class ToDoAPI {
             String result_json = gson.toJson(todos);
             return Response.ok().entity(result_json).build();
 
-        }
     }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response AddNewTodo(Todo todo) {
+       todoDAO.addNewTodo(todo);
+       return Response.ok().build();
+    }
+ }
 
