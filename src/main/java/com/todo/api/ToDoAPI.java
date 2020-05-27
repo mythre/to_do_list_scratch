@@ -38,7 +38,7 @@ public class ToDoAPI {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON})
-    public Response AddNewTodo(Todo todo) {
+    public Response addNewTodo(Todo todo) {
        todoDAO.addNewTodo(todo);
        return Response.ok().build();
     }
