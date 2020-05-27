@@ -13,6 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodoDAOImpl implements TodoDAO {
+    
+    private  PostgresSql postgresSql;
+    
+    public TodoDAOImpl(PostgresSql postgresSql)
+    {
+        this.postgresSql = postgresSql;
+    }
+    
+    private static final INSERT_TODOS_SQL = "INSERT INTO TODO (TASKITEM, USERID, COMPLETED) VALUES (?,?,?);";
     @Override
     public List<Todo> listAllTodos(int userId)  {
         List<Todo> todos = new ArrayList<>();
@@ -37,5 +46,18 @@ public class TodoDAOImpl implements TodoDAO {
         }
 
         return todos;
+    }
+    
+    @Override
+    public void addNewTodo(Todo todo) {
+        try (Connection connection = postgresSql.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TODOS_SQL)) {
+            preparedStatement.setString(1, todo.getTaskItem());
+            preparedStatement.setInt(2, todo.getUserId());
+            preparedStatement.setBoolean(3, todo.getCompleted());
+            System.out.println(preparedStatement);
+            preparedStatement.executeUpdate();
+        } catch (SQLException exception) {
+            System.out.println(exception);
+        }
     }
 }
