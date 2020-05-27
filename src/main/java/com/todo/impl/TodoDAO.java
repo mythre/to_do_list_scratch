@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TodoDAO {
     List<Todo> listAllTodos(int userId) ;
+    void addNewTodo(Todo todo);
 }
