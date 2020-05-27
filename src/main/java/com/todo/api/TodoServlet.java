@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet("/v1/todos")
+@WebServlet("/v1/todos/")
 public class TodoServlet extends HttpServlet {
     TodoDAO todoDAO;
     public void init() {
@@ -26,7 +26,7 @@ public class TodoServlet extends HttpServlet {
     @Produces("application/json")
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        List<Todo> todos = todoDAO.listAllTodos();
+        List<Todo> todos = todoDAO.listAllTodos(1);
         String todoJsonString = new Gson().toJson(todos);
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json");
