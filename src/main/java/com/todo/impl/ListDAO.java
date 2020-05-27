@@ -14,7 +14,6 @@ public class ListDAO {
     {
         this.postgresSql = postgresSql;
         conn = postgresSql.getConnection();
-        System.out.println("hi");
     }
     public static  final String Query_getTasks_By_UserId = "SELECT taskId,taskItem FROM tasks WHERE userId = ?";
     public static final String Query_update_completed_by_taskId = "UPDATE tasks SET completed = ? WHERE taskId = ?";

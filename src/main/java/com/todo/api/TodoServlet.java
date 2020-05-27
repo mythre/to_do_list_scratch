@@ -13,9 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Produces;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.List;
 
-@WebServlet("/v1/todos/")
+@WebServlet("/v1/todos/*")
 public class TodoServlet extends HttpServlet {
     TodoDAO todoDAO;
     public void init() {
@@ -25,8 +26,19 @@ public class TodoServlet extends HttpServlet {
     @Override
     @Produces("application/json")
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        List<Todo> todos = todoDAO.listAllTodos(1);
+        String pathInfo=req.getPathInfo();
+        Integer userId;
+        try{
+            String[] pathParts = pathInfo.split("/");
+            System.out.println(Arrays.toString(pathParts));
+            userId = (pathParts.length>0)?Integer.valueOf(pathParts[1]):0;
+            System.out.println(userId);}
+        catch(Exception exception)
+        {
+            exception.printStackTrace();
+            userId=0;
+        }
+        List<Todo> todos = todoDAO.listAllTodos(userId);
         String todoJsonString = new Gson().toJson(todos);
         PrintWriter out = resp.getWriter();
         resp.setContentType("application/json");
