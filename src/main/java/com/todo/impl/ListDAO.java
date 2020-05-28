@@ -21,7 +21,7 @@ public class ListDAO {
     public static final String Query_update_completed_by_taskId = "UPDATE tasks SET completed = ? WHERE taskId = ?";
     public static final String Query_update_taskItem_by_taskId = "UPDATE tasks SET taskItem = ? WHERE taskId = ?";
     public static final String  Query_delete_by_taskId = "DELETE FROM tasks WHERE taskId IN (%s)";
-    private static final String Query_insert_todo = "INSERT INTO TODO (TASKITEM, USERID, COMPLETED) VALUES (?,?,?);";
+    private static final String Query_insert_todo = "INSERT INTO tasks (TASKITEM, USERID) VALUES (?,?);";
 
 
     public ResultSet getTasksByUserId(int userId) throws SQLException
@@ -61,7 +61,6 @@ public class ListDAO {
         PreparedStatement preparedStatement = conn.prepareStatement(Query_insert_todo);
         preparedStatement.setString(1, todo.getTaskItem());
         preparedStatement.setInt(2, todo.getUserId());
-        preparedStatement.setBoolean(3, false);
         System.out.println(preparedStatement);
         preparedStatement.executeUpdate();
     }
