@@ -6,6 +6,8 @@ import com.todo.model.Todo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -13,11 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TodoDAOImpl implements TodoDAO {
+    ApplicationContext ctx;
+    ListDAO list_obj;
+    public TodoDAOImpl() {
+        this.ctx = new AnnotationConfigApplicationContext(DatabaseConfig.class);
+        this.list_obj = ctx.getBean(ListDAO.class);
+    }
     @Override
     public List<Todo> listAllTodos(int userId)  {
         List<Todo> todos = new ArrayList<>();
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(DatabaseConfig.class);
-        ListDAO list_obj = ctx.getBean(ListDAO.class);
         ResultSet Result = null ;
         try {
             Result = list_obj.getTasksByUserId(userId);
@@ -37,5 +43,14 @@ public class TodoDAOImpl implements TodoDAO {
         }
 
         return todos;
+    }
+    
+    @Override
+    public void addNewTodo(Todo todo) {
+        try {
+            list_obj.insertTask(todo);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

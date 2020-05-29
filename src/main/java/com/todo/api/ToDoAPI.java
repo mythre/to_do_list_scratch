@@ -5,11 +5,9 @@ import com.todo.model.Todo;
 import com.todo.impl.TodoDAO;
 import com.todo.impl.TodoDAOImpl;
 import com.google.gson.Gson;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.Produces;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -33,6 +31,18 @@ public class ToDoAPI {
             String result_json = gson.toJson(todos);
             return Response.ok().entity(result_json).build();
 
-        }
     }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response addNewTodo(Todo todo) {
+        try {
+            todoDAO.addNewTodo(todo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok().build();
+    }
+ }
 
