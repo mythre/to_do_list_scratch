@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Produces;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +46,17 @@ public class TodoServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         out.print(todoJsonString);
+        out.flush();
+    }
+    protected void doPost(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException
+    {
+        BufferedReader reader = req.getReader();
+        Todo todo = new Gson().fromJson(reader,Todo.class);
+        todoDAO.addNewTodo(todo);
+        PrintWriter out = resp.getWriter();
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        out.print("");
         out.flush();
     }
 }

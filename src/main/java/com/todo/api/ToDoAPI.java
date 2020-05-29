@@ -37,11 +37,7 @@ public class ToDoAPI {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON})
     public Response addNewTodo(Todo todo) {
-        try {
-            todoDAO.addNewTodo(todo);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        todoDAO.addNewTodo(todo);
         return Response.ok().build();
     }
  }
