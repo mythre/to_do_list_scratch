@@ -1,6 +1,7 @@
 package com.todo.impl;
 
 
+import com.google.gson.Gson;
 import com.todo.impl.TodoDAO;
 import com.todo.model.Todo;
 import org.springframework.context.ApplicationContext;
@@ -31,14 +32,25 @@ public class TodoDAOImpl implements TodoDAO {
         List<Todo> todos = new ArrayList<>();
         ResultSet Result = null ;
 
+        Gson gson = new Gson();
+        Todo cachedTodo;
+        String todoJson;
+
         final JedisPoolConfig poolConfig = jedisConfig.buildPoolConfig();
         JedisPool jedisPool = new JedisPool(poolConfig, "localhost");
         try (Jedis jedis = jedisPool.getResource()) {
-            System.out.println(jedis.get("employee"));
+            List<String> todosString = jedis.lrange("userid_"+userId, 0, -1);
+            for(String tS : todosString) {
+                cachedTodo = gson.fromJson(tS, Todo.class);
+                todos.add(cachedTodo);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(!todos.isEmpty()) {
+            System.out.println("Retrieved from Cache!!");
+            return todos;
+        }
         try {
             Result = list_obj.getTasksByUserId(userId);
 
@@ -49,11 +61,13 @@ public class TodoDAOImpl implements TodoDAO {
                 todo.setTaskItem(Result.getString("taskItem"));
                 todo.setUserId(userId);
                 todos.add(todo);
+                todoJson = gson.toJson(todo);
+                try (Jedis jedis = jedisPool.getResource()) {
+                    jedis.lpush("userid_"+userId, todoJson);
+                }
             }
-        }
-        catch(SQLException sq){
+        } catch(Exception sq){
             sq.printStackTrace();
-            return todos;
         }
 
         return todos;
