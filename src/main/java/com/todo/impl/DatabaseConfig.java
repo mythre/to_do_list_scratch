@@ -1,5 +1,7 @@
 package com.todo.impl;
 import org.springframework.context.annotation.*;
+
+
 import java.sql.SQLException;
 @Configuration
 public class DatabaseConfig{
@@ -10,6 +12,11 @@ public class DatabaseConfig{
     @Bean
     public ListDAO listDAO() throws SQLException {
         return new ListDAO(postgresSql());
+    }
+
+    @Bean
+    public JedisConfig jedisConfig(){
+        return new JedisConfig();
     }
 
 }
